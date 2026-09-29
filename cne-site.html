@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CNE – prototip site</title>
+<style>
+:root{--navy:#0b2a5b;--blue:#2f6fb5;--sky:#e6f1fb;--sky2:#bcd9f2;--mustard:#d9a520;--ink:#14213d;--bg:#fff;--card:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0a1730;--card:#10244a;--sky:#12294f;--sky2:#28497f;--ink:#e8f0fa}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--ink);line-height:1.6}
+h1,h2,h3,nav,button,.tag{font-family:'Trebuchet MS',Verdana,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+nav{position:sticky;top:0;background:var(--navy);display:flex;align-items:center;gap:20px;padding:12px 5%;flex-wrap:wrap;z-index:5}
+nav b{color:#fff;font-size:1.2rem;margin-right:auto;letter-spacing:.5px}
+nav b span{color:var(--mustard)}
+nav a{color:#dbe9f7;text-decoration:none;font-size:.95rem}
+nav a:hover{color:var(--mustard)}
+.hero{background:var(--navy);color:#fff;padding:72px 5% 84px;border-bottom:8px solid var(--mustard)}
+.hero div{max-width:820px;margin:auto}
+.hero h1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.1;margin:0 0 18px}
+.hero p{font-size:1.15rem;color:#cfe2f5;max-width:60ch}
+.btn{display:inline-block;background:var(--mustard);color:#1b1b1b;font-weight:bold;padding:12px 22px;border-radius:4px;text-decoration:none;border:0;cursor:pointer;font-size:1rem}
+.btn:hover{background:#ecb92f}
+section{padding:60px 5%}
+section>div{max-width:920px;margin:auto}
+section:nth-of-type(even){background:var(--sky)}
+h2{font-size:1.9rem;color:var(--navy);margin:0 0 8px}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) h2{color:#fff}}
+.lead{max-width:62ch;margin-bottom:28px}
+.levels{display:grid;gap:0;max-width:640px}
+.lvl{background:var(--card);border-left:8px solid var(--blue);padding:14px 20px;margin-left:0}
+.lvl:nth-child(2){margin-left:28px;border-color:var(--mustard)}
+.lvl:nth-child(3){margin-left:56px;border-color:var(--navy)}
+.lvl+.lvl{margin-top:10px}
+.lvl h3{margin:0;font-size:1.1rem}.lvl p{margin:4px 0 0;font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--sky2);border-top:5px solid var(--mustard);padding:18px 20px}
+.card h3{margin:0 0 6px;font-size:1.05rem}.card p{margin:0;font-size:.95rem}
+.vote{display:grid;gap:12px;max-width:620px}
+.cand{background:var(--card);border:1px solid var(--sky2);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center}
+.cand h3{margin:0;font-size:1rem}.cand small{grid-column:1/-1}
+.bar{grid-column:1/-1;height:12px;background:var(--sky);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .5s}
+.cand button{background:var(--navy);color:#fff;border:0;padding:8px 16px;border-radius:4px;cursor:pointer}
+.cand button:disabled{background:#8a98ad;cursor:default}
+#msg{min-height:1.6em;font-weight:bold;color:var(--blue)}
+.note{font-size:.85rem;opacity:.8;margin-top:12px}
+footer{background:var(--navy);color:#cfe2f5;padding:32px 5%;text-align:center;font-size:.9rem}
+footer b{color:var(--mustard)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+nav a.on{color:var(--mustard);font-weight:bold}
+h1.ph{font-size:1.9rem;color:var(--navy);margin:0 0 8px}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) h1.ph{color:#fff}}
+section{min-height:40vh}
+
+main[hidden]{display:none}
+
+.steps{list-style:none;margin:0;padding:0 0 0 34px;border-left:4px solid var(--mustard);max-width:680px}
+.steps li{position:relative;padding:0 0 26px 8px}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{content:"";position:absolute;left:-48px;top:5px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:4px solid var(--navy)}
+.steps h3{margin:0 0 4px;font-size:1.1rem}.steps p{margin:0}
+.crow{display:grid;grid-template-columns:120px 1fr;gap:6px 16px;padding:16px 20px;margin-bottom:10px;background:var(--card);border:1px solid var(--sky2);border-left:8px solid var(--navy);text-decoration:none;max-width:680px;transition:transform .2s,border-color .2s}
+.crow:hover{transform:translateX(8px);border-left-color:var(--mustard)}
+.crow b{font-family:'Trebuchet MS',Verdana,sans-serif}.crow span{overflow-wrap:anywhere}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+main{animation:fade .4s}
+.hero div>*{animation:up .7s both}
+.hero div>*:nth-child(2){animation-delay:.15s}.hero div>*:nth-child(3){animation-delay:.3s}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+.rv.in{opacity:1;transform:none}
+.rv.done{transition:transform .2s,box-shadow .2s}
+.card:hover,.lvl:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(11,42,91,.18)}
+.btn{transition:transform .2s,background .2s}.btn:hover{transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}*{animation:none!important}}
+@media(max-width:520px){.crow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><b>CNE<span>.</span></b><a href="#acasa" data-p="acasa">Acasă</a><a href="#structura" data-p="structura">Structură</a><a href="#presa" data-p="presa">Biroul de presă</a><a href="#alegeri" data-p="alegeri">Alegeri</a><a href="#contact" data-p="acasa">Contact</a></nav>
+<main id="p-acasa" hidden>
+<header class="hero"><div>
+  <h1>Vocea elevilor din România, într-un singur loc.</h1>
+  <p>Consiliul Național al Elevilor este structura națională de reprezentare a elevilor din învățământul preuniversitar de stat și privat. Aici găsești ce facem, cum ne organizăm și cum poți lua parte la decizii.</p>
+  <a class="btn" href="#alegeri">Vezi platforma de alegeri</a>
+</div></header>
+<section id="despre"><div><h2>Despre noi</h2>
+<p class="lead">Consiliul Național al Elevilor (CNE) este structura națională de reprezentare a elevilor din învățământul preuniversitar de stat și privat din România. Este o structură formată din elevi, pentru elevi, iar acest lucru îi asigură independența și caracterul democratic. Rolul lui este de partener al Ministerului Educației, cu rol consultativ în procesul decizional: elevii sunt ascultați atunci când se iau decizii care îi privesc.</p>
+<p class="lead">Forța CNE vine din rețeaua lui, care ajunge până în fiecare școală. Pozițiile și demersurile pornesc de la nevoile elevilor, identificate prin consultarea consiliilor județene și școlare.</p><div class="grid"><div class="card"><h3>Reprezentare</h3><p>Aducem problemele elevilor în discuție la nivel național. Fiecare consiliu județean și școlar poate transmite mai departe ce se întâmplă în școala lui.</p></div><div class="card"><h3>Informare</h3><p>Elevii merită informații clare și la timp despre calendarul școlar, drepturile lor și oportunități. Un mesaj greșit sau depășit strică încrederea, de aceea contează verificarea înainte de publicare.</p></div><div class="card"><h3>Proiecte și evenimente</h3><p>CNE organizează evenimente pentru elevii reprezentanți, printre care Gala Elevului Reprezentant, ajunsă la ediția a șaptea în 2024. Scopul este să fie evidențiate inițiativele de succes din școli.</p></div></div></div></section>
+<section><div><h2>Cum poți lua parte</h2>
+<p class="lead">Nu trebuie să fii în conducerea CNE ca să contezi. Poți începe în ordinea de mai jos.</p>
+<ol class="steps">
+<li><h3>Începe în școala ta</h3><p>Consiliul școlar al elevilor există în fiecare unitate de învățământ. Vorbește cu reprezentanții lui și spune-le ce ar trebui îmbunătățit. Alegerile la nivel de școală au loc de regulă în octombrie.</p></li>
+<li><h3>Contactează consiliul județean</h3><p>Consiliul județean al elevilor colaborează cu inspectoratul școlar și duce problemele mai departe. Întreabă-l când are loc următoarea adunare generală, la care elevii pot participa ca observatori.</p></li>
+<li><h3>Intră în echipa de comunicare</h3><p>Dacă îți place să scrii, să faci design, foto, video sau site-uri, Biroul de presă are nevoie de oameni creativi.</p></li>
+<li><h3>Rămâi informat</h3><p>Urmărește canalele oficiale ale CNE și verifică mereu sursa unei informații înainte să o distribui.</p></li>
+</ol></div></section>
+<section id="contact"><div><h2>Ne găsești pe</h2>
+<p class="lead">Aici poți lua legătura cu Consiliul Național al Elevilor. Pentru presă și colaborări, mesajele ajung la Biroul de presă. Datele sunt luate din paginile publice ale CNE.</p>
+<a class="crow" href="https://www.facebook.com/consiliulelevilor/" target="_blank" rel="noopener"><b>Facebook</b><span>facebook.com/consiliulelevilor</span></a>
+<a class="crow" href="https://www.instagram.com/consiliulelevilor/" target="_blank" rel="noopener"><b>Instagram</b><span>@consiliulelevilor</span></a>
+<a class="crow" href="mailto:contact@consiliulelevilor.ro"><b>E-mail</b><span>contact@consiliulelevilor.ro</span></a>
+<a class="crow" href="https://consiliulelevilor.ro/" target="_blank" rel="noopener"><b>Site oficial</b><span>consiliulelevilor.ro</span></a>
+<p class="note">Sloganul lor: #fiivoceacolegilortăi. Dacă un link nu se deschide, caută „Consiliul Național al Elevilor" pe platforma respectivă.</p>
+<a class="btn" href="#acasa">Înapoi sus</a></div></section>
+
+</main>
+<main id="p-structura" hidden>
+<section id="structura"><div><h1 class="ph">Cum ne organizăm</h1>
+<p class="lead">CNE funcționează pe trei niveluri, de la școală până la nivel național. Structura se bazează pe principiul subsidiarității: problemele se rezolvă cât mai aproape de locul unde apar și urcă la nivelul următor doar când e nevoie.</p>
+<div class="levels"><div class="lvl"><h3>Consiliul Național al Elevilor</h3><p>Reprezintă elevii la nivel național, este partener al Ministerului Educației și coordonează consiliile din județe.</p></div><div class="lvl"><h3>Consiliile județene și Consiliul Municipal al Elevilor București</h3><p>Există câte unul în fiecare județ și unul pentru București. Sunt structuri partenere ale inspectoratelor școlare și adună problemele din școlile teritoriului.</p></div><div class="lvl"><h3>Consiliile școlare ale elevilor</h3><p>Sunt obligatorii în fiecare unitate de învățământ și sunt partenere ale conducerii școlii. Aici încep toate demersurile.</p></div></div></div></section>
+<section><div><h2>Cum circulă informația</h2>
+<p class="lead">Rețeaua funcționează în ambele sensuri.</p>
+<div class="grid"><div class="card"><h3>De jos în sus</h3><p>Consiliul școlar ridică o problemă, consiliul județean o centralizează, iar CNE o prezintă la nivel național, inclusiv Ministerului Educației.</p></div><div class="card"><h3>De sus în jos</h3><p>Informațiile oficiale, calendarele și deciziile importante ajung de la CNE la județe și de acolo la elevii din fiecare școală.</p></div><div class="card"><h3>Colaborare cu instituțiile</h3><p>Consiliile județene colaborează cu inspectoratele școlare, iar în fiecare școală elevii lucrează alături de conducerea unității.</p></div></div></div></section>
+<section><div><h2>De ce contează structura</h2>
+<p class="lead">O rețea bine organizată înseamnă că un elev dintr-un sat mic poate fi auzit la fel de bine ca unul dintr-un oraș mare. Pentru asta, comunicarea între niveluri trebuie să fie rapidă, clară și ușor de urmărit, iar aici intră în joc site-ul și Biroul de presă.</p>
+</div></section>
+
+</main>
+<main id="p-presa" hidden>
+<section id="presa"><div><h1 class="ph">Biroul de presă</h1>
+<p class="lead">Biroul de presă al CNE este organismul care dezvoltă și implementează politica de imagine și asigură identitatea vizuală a structurii. Cu alte cuvinte, se ocupă de felul în care CNE arată și vorbește în fața elevilor. Activitatea lui este coordonată de Departamentul de relații externe.</p>
+<div class="grid"><div class="card"><h3>Redactori</h3><p>Scriu știri, comunicate și postări pe înțelesul elevilor. Verifică informațiile și păstrează același ton în toate materialele.</p></div><div class="card"><h3>Designeri grafici</h3><p>Creează afișe, postări și materiale pentru evenimente, respectând identitatea vizuală a CNE.</p></div><div class="card"><h3>Fotografi</h3><p>Surprind evenimentele și oamenii din spatele lor: adunări generale, gale, proiecte în școli.</p></div><div class="card"><h3>Videografi</h3><p>Realizează clipuri și reportaje scurte pentru rețelele sociale și pentru evenimente.</p></div><div class="card"><h3>Web developeri</h3><p>Dezvoltă și întrețin site-ul CNE, creează platforme pentru alegeri sau evenimente și sprijină consiliile județene în realizarea site-urilor proprii.</p></div></div></div></section>
+<section><div><h2>Cum lucrează echipa</h2>
+<p class="lead">Fiecare rol contează, dar rezultatul e bun doar când se lucrează împreună.</p>
+<div class="grid"><div class="card"><h3>Un mesaj, mai multe formate</h3><p>O știre poate deveni articol, postare, clip și pagină pe site. Redactorul, designerul și videograful pornesc de la aceeași idee.</p></div><div class="card"><h3>Aceeași imagine peste tot</h3><p>Culorile, fonturile și tonul rămân aceleași pe toate canalele, ca elevii să recunoască imediat CNE.</p></div><div class="card"><h3>Informație verificată</h3><p>Înainte de publicare se verifică datele, datele calendaristice și sursele. O greșeală publică se observă repede.</p></div></div></div></section>
+<section><div><h2>Ce face web developerul</h2>
+<p class="lead">Site-ul este locul unde elevii găsesc informația oficială. Web developerul răspunde ca acest loc să fie rapid, clar, ușor de folosit pe telefon și accesibil tuturor.</p>
+<div class="grid"><div class="card"><h3>Site-ul oficial</h3><p>Structură clară, conținut actualizat, pagini ușor de găsit și adaptate nevoilor elevilor.</p></div><div class="card"><h3>Platforma de alegeri</h3><p>Un sistem transparent, în care regulile sunt clare și rezultatele pot fi verificate. Vezi o idee simplificată în pagina Alegeri.</p></div><div class="card"><h3>Sprijin pentru județe</h3><p>Șabloane și feedback pentru consiliile județene care vor propriul site, ca să nu o ia fiecare de la zero.</p></div></div></div></section>
+
+</main>
+<main id="p-alegeri" hidden>
+<section id="alegeri"><div><h1 class="ph">Platforma de alegeri (demo)</h1>
+<p class="lead">Alegerile într-o structură de elevi trebuie să fie corecte și ușor de urmărit. O platformă online poate ajuta prin trei lucruri: reguli publice, un vot per persoană și rezultate vizibile pentru toți. Demo-ul de mai jos arată ideea într-o formă simplă.</p>
+<div class="vote" id="vote"></div>
+  <p id="msg" role="status"></p>
+  <p class="note">Într-o versiune reală ar fi necesare autentificare, un vot per elev și un registru public verificabil.</p></div></section>
+<section><div><h2>Ce ar trebui să aibă o platformă reală</h2>
+<p class="lead">Un demo arată cum arată votul, dar o platformă reală are nevoie de mai mult.</p>
+<div class="grid"><div class="card"><h3>Autentificare</h3><p>Doar persoanele care au dreptul să voteze pot participa, iar fiecare votează o singură dată.</p></div><div class="card"><h3>Vot secret și verificabil</h3><p>Nimeni nu trebuie să afle cum a votat altcineva, dar procesul trebuie să poată fi verificat după încheiere.</p></div><div class="card"><h3>Transparență</h3><p>Regulile, candidații și programele sunt publicate înainte de vot, iar rezultatele finale sunt afișate public.</p></div><div class="card"><h3>Accesibilitate</h3><p>Platforma trebuie să funcționeze pe telefon și pe conexiuni slabe, pentru ca votul să fie la îndemâna tuturor.</p></div></div></div></section>
+<section><div><h2>Cum o poți încerca</h2>
+<p class="lead">Alege un candidat de mai sus și apasă „Votează". Numărătoarea se actualizează imediat. Candidații și voturile sunt fictive, iar totul se resetează când reîncarci pagina.</p>
+</div></section>
+
+</main>
+<footer><b>Prototip neoficial</b>, realizat pentru aplicația la Biroul de presă CNE. Conținutul se bazează pe informații publice despre structura CNE.<br>Realizat de <b>Cristescu Daria</b>, clasa a IX-a, Colegiul Național Coriolan Brediceanu.<br>© 2026 Cristescu Daria. Toate drepturile de autor rezervate.</footer>
+<script>
+const cands=[{n:"Candidat A",d:"Program: transparență și comunicare"},{n:"Candidat B",d:"Program: proiecte în fiecare județ"},{n:"Candidat C",d:"Program: dialog cu ministerul și școlile"}];
+const votes=cands.map(()=>0);let voted=false;
+const box=document.getElementById('vote'),msg=document.getElementById('msg');
+function draw(){
+  const t=votes.reduce((a,b)=>a+b,0);
+  box.innerHTML=cands.map((c,i)=>{const p=t?Math.round(votes[i]/t*100):0;
+    return `<div class="cand"><h3>${c.n}</h3><button data-i="${i}" ${voted?'disabled':''}>Votează</button><small>${c.d} · ${votes[i]} voturi (${p}%)</small><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('');
+}
+box.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||voted)return;
+  const i=+b.dataset.i;votes[i]++;voted=true;
+  msg.textContent='Vot înregistrat pentru '+cands[i].n+'. Mulțumim!';
+  draw();
+});
+// voturi de pornire, pentru ca demo-ul să pară viu
+votes[0]=12;votes[1]=9;votes[2]=15;
+draw();
+
+function go(){
+  let h=(location.hash||'#acasa').slice(1),tgt=h==='contact'?'acasa':h;
+  if(!document.getElementById('p-'+tgt)){tgt='acasa';h='acasa'}
+  document.querySelectorAll('main').forEach(m=>m.hidden=m.id!=='p-'+tgt);
+  document.querySelectorAll('nav a[data-p]').forEach(a=>{const on=a.getAttribute('href')==='#'+h;a.classList.toggle('on',on);on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
+  document.title='CNE – prototip site';
+  if(h==='contact'){document.getElementById('contact').scrollIntoView()}else window.scrollTo(0,0);
+}
+addEventListener('hashchange',go);go();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);setTimeout(()=>{e.target.classList.add('done');e.target.style.transitionDelay=''},700)}}),{threshold:.15});
+document.querySelectorAll('.card,.lvl,.steps li,.cand,.crow').forEach((el,i)=>{el.classList.add('rv');el.style.transitionDelay=(i%4)*70+'ms';io.observe(el)});
+
+</script>
+</body>
+</html>
